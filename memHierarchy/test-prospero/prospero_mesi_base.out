@@ -1,0 +1,6 @@
+[prospero-test] cores=4 protocol=MESI opt_on=False
+
+    Counter[l1cache3] inv=0 interv=0 getS_sent=1 getX_sent=0 getSX_sent=0 trans=1 I->S=1 I->E=0 I->M=0 S->I=0 S->E=0 S->M=0 E->I=0 E->S=0 E->M=0 M->I=0 M->S=0 M->E=0
+    Counter[l1cache2] inv=0 interv=0 getS_sent=1 getX_sent=0 getSX_sent=0 trans=1 I->S=1 I->E=0 I->M=0 S->I=0 S->E=0 S->M=0 E->I=0 E->S=0 E->M=0 M->I=0 M->S=0 M->E=0
+    Counter[l1cache1] inv=0 interv=0 getS_sent=1 getX_sent=0 getSX_sent=0 trans=1 I->S=1 I->E=0 I->M=0 S->I=0 S->E=0 S->M=0 E->I=0 E->S=0 E->M=0 M->I=0 M->S=0 M->E=0
+    Counter[l1cache0] inv=0 interv=1 getS_sent=0 getX_sent=1 getSX_sent=0 trans=2 I->S=0 I->E=0 I->M=1 S->I=0 S->E=0 S->M=0 E->I=0 E->S=0 E->M=0 M->I=0 M->S=1 M->E=0

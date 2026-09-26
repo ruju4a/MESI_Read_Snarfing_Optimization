@@ -1,0 +1,72 @@
+Prospero based coherence test (base vs optimized)
+
+This folder contains a small, directed test harness for exercising the MESI L1 coherence logic using SST's prospero.prosperoCPU traces.
+
+The harness runs the same build twice:
+  - base: coherence_opt = 0
+  - optimized: coherence_opt = 1 (controlled by an environment variable)
+
+------------------------------------------------------------
+Files and their roles
+
+example-4core-prospero.py
+  Builds the SST model:
+    - 4 x prospero.prosperoCPU (one per core)
+    - 4 x private L1 caches using memHierarchy.Cache (MESI protocol)
+    - 1 shared bus (memHierarchy.Bus)
+    - 1 shared L2 cache (memHierarchy.Cache)
+    - 1 memory controller (memHierarchy.MemController + memHierarchy.simpleMem)
+
+  It also:
+    - loads per-core trace files from PROSPERO_TRACE_DIR via prospero.ProsperoTextTraceReader
+    - sets coherence_opt on each L1 using OPT_ON
+
+run-prospero-traces.py
+  Wrapper that runs the SST model twice:
+    1. runs base mode (OPT_ON=0)
+    2. runs optimized mode (OPT_ON=1)
+
+  The script writes output files with names like:
+    - prospero_mesi_base.out
+    - prospero_mesi_opt.out
+
+prospero-traces/prospero_core{0..3}.trace
+  Default per-core trace inputs consumed by prospero.ProsperoTextTraceReader.
+  To test a new directed scenario, edit these trace files.
+
+------------------------------------------------------------
+How to run
+
+From this folder:
+  python3 run-prospero-traces.py
+
+Note: you do not set OPT_ON manually; the runner sets it for base vs optimized runs.
+
+------------------------------------------------------------
+Trace file format (Prospero text trace)
+
+Each line in prospero_core*.trace has the form:
+  <cycle> <op> <addr> <lenBytes>
+
+Where:
+  - <cycle>: Minimum cycle count at which the request can be issued
+  - <op>: operation, e.g. R (read) or W (write)
+  - <addr>: Mem address
+  - <lenBytes>: access size in bytes
+
+------------------------------------------------------------
+How to change the directed test (editing traces)
+
+1. Decide the access pattern you want to compare (base vs optimized). Common options:
+   - all cores repeatedly read the same line
+   - a round-robin read-then-write to the same line
+
+2. Edit prospero-traces/prospero_core0.trace ... prospero-traces/prospero_core3.trace so each core performs the desired sequence on the target address(es).
+
+3. Rerun:
+   python3 run-prospero-traces.py
+
+If you prefer not to modify the same traces, create a new directory with the same filenames (prospero_core0.trace ... prospero_core3.trace) and run:
+  PROSPERO_TRACE_DIR=/path/to/your-traces python3 run-prospero-traces.py
+
+
